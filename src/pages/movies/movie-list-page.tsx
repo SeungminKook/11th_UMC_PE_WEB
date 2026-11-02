@@ -1,77 +1,51 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { getMovies } from "../../api/movies/get-movies";
-import type { TmdbMovieListItem } from "../../api/movies/models";
 import MovieGrid from "../../components/movies/movie-grid";
 import Pagination from "../../components/movies/pagination";
 
 export function MovieListPage() {
-  const [movies, setMovies] = useState<TmdbMovieListItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [page, setPage] = useState(1);
 
-  useEffect(() => {
-    let ignore = false;
+  const moviesQuery = useQuery({
+    queryKey: ["movies", "list", { page }],
+    queryFn: () => getMovies({ page }),
+  });
 
-    async function loadMovies() {
-      setIsLoading(true);
-      setErrorMessage(null);
+  const movies = moviesQuery.data?.results ?? [];
+  const totalPages = moviesQuery.data?.total_pages ?? 0;
 
-      try {
-        const response = await getMovies({ page: 1 });
-        if (!ignore) {
-          setMovies(response.results);
-          setCurrentPage(1);
-        }
-      } catch {
-        if (!ignore) setErrorMessage("영화 목록을 불러오지 못했어요.");
-      } finally {
-        if (!ignore) setIsLoading(false);
-      }
-    }
-
-    loadMovies();
-
-    return () => {
-      ignore = true;
-    };
-  }, []);
-
-  const pageSize = 10;
-  const totalPages = Math.ceil(movies.length / pageSize);
-  const visibleMovies = movies.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize,
-  );
+  const handlePageChange = (nextPage: number) => {
+    setPage(nextPage);
+  };
 
   return (
     <main className="mx-auto min-h-[calc(100vh-73px)] w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
       <h1 className="mb-7 text-2xl font-extrabold tracking-tight text-gray-950 sm:text-3xl">
         영화 목록
       </h1>
-      {isLoading ? (
+
+      {moviesQuery.isPending ? (
         <p role="status" className="py-12 text-center text-gray-500">
-          영화 목록을 불러오는 중이에요.
+          영화를 불러오는 중이에요.
         </p>
-      ) : errorMessage ? (
+      ) : moviesQuery.isError ? (
         <p role="alert" className="py-12 text-center text-red-600">
-          {errorMessage}
+          {moviesQuery.error.message}
         </p>
       ) : movies.length === 0 ? (
-        <p className="py-12 text-center text-gray-500">
-          조건에 맞는 영화가 없어요.
-        </p>
+        <p className="py-12 text-center text-gray-500">표시할 영화가 없어요.</p>
       ) : (
         <>
-          <MovieGrid movies={visibleMovies} />
+          <MovieGrid movies={movies} />
+
           <Pagination
-            currentPage={currentPage}
+            currentPage={page}
             totalPages={totalPages}
-            onPageChange={(page) => setCurrentPage(page)}
+            onPageChange={handlePageChange}
           />
         </>
       )}
     </main>
   );
 }
-

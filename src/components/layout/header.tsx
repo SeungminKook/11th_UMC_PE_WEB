@@ -7,6 +7,7 @@ export default function Header() {
   });
   const isMovieListPage = pathname === "/";
   const isSearchPage = pathname === "/search";
+  const isProfilePage = pathname === "/my-page" || pathname === "/my-page/edit";
 
   return (
     <header className="z-10 border-b border-gray-200 bg-white">
@@ -37,12 +38,16 @@ export default function Header() {
             >
               검색
             </Link>
-            <button
-              type="button"
-              className="hidden py-2 text-sm font-medium text-gray-500 transition-colors hover:text-gray-950 sm:inline-flex"
+            <Link
+              to="/my-page"
+              aria-current={isProfilePage ? "page" : undefined}
+              className={cn(
+                "hidden py-2 text-sm font-medium text-gray-500 transition-colors hover:text-gray-950 sm:inline-flex",
+                isProfilePage && "font-bold text-gray-950 underline",
+              )}
             >
               내 정보
-            </button>
+            </Link>
           </nav>
         </div>
 
@@ -54,9 +59,9 @@ export default function Header() {
           >
             <img src="/icons/search.svg" alt="" className="h-5 w-5" />
           </Link>
-          <button type="button" className="rounded-lg bg-indigo-600 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-indigo-700 sm:text-sm">
+          <Link to="/login" className="rounded-lg bg-[#4a60df] px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-indigo-700 sm:text-sm">
             로그인
-          </button>
+          </Link>
         </div>
       </div>
     </header>

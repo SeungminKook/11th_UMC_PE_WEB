@@ -1,4 +1,6 @@
-import { useEffect, useState, type SubmitEvent } from "react";
+import { MovieRatingForm } from "../../components/ratings/movie-rating-form";
+import { useAuthStore } from "../../stores/auth-store";
+import { getAuthMemberId } from "../../utils/auth-member-id";
 import { Link, useParams } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { getMovieDetail } from "../../api/movies/get-movie-detail";
@@ -23,15 +25,8 @@ export function MovieDetailPage() {
     enabled: isValidMovieId,
   });
 
-  const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState("");
-  const [isReviewSaved, setIsReviewSaved] = useState(false);
-
-  useEffect(() => {
-    setRating(0);
-    setComment("");
-    setIsReviewSaved(false);
-  }, [movieId]);
+  const accessToken = useAuthStore((state) => state.accessToken);
+  const memberId = getAuthMemberId(accessToken);
 
   if (!isValidMovieId) {
     return (
@@ -170,59 +165,11 @@ export function MovieDetailPage() {
               별점을 주고, 후기는 선택이에요.
             </p>
 
-            <form
-              className="mt-3"
-              onSubmit={(event: SubmitEvent<HTMLFormElement>) => {
-                event.preventDefault();
-                setIsReviewSaved(true);
-              }}
-            >
-              <div className="flex gap-1" role="group" aria-label="별점 선택">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <button
-                    key={star}
-                    type="button"
-                    aria-label={`${star}점`}
-                    aria-pressed={rating === star}
-                    onClick={() => {
-                      setRating(star);
-                      setIsReviewSaved(false);
-                    }}
-                    className={`flex h-8 w-8 items-center justify-center rounded-md border text-lg transition-colors ${
-                      rating >= star
-                        ? "border-amber-300 bg-amber-50 text-amber-500"
-                        : "border-gray-200 bg-white text-gray-400 hover:bg-gray-100"
-                    }`}
-                  >
-                    ★
-                  </button>
-                ))}
-              </div>
-
-              <label className="sr-only" htmlFor="movie-review">
-                영화 후기
-              </label>
-
-              <textarea
-                id="movie-review"
-                value={comment}
-                onChange={(event) => {
-                  setComment(event.target.value);
-                  setIsReviewSaved(false);
-                }}
-                placeholder="영화를 보고 느낀 점을 남겨보세요."
-                rows={3}
-                className="mt-2 w-full resize-y rounded-md border border-gray-200 bg-white p-3 text-xs outline-none placeholder:text-gray-400 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
-              />
-
-              <button
-                type="submit"
-                disabled={rating === 0}
-                className="mt-1 w-full rounded-md bg-gray-900 px-4 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-300"
-              >
-                {isReviewSaved ? "평점 저장 완료" : "평점 저장"}
-              </button>
-            </form>
+            <MovieRatingForm
+              key={movieId + ":" + memberId}
+              movieId={movieId}
+              memberId={memberId}
+            />
           </aside>
         </div>
       </section>

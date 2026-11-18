@@ -31,7 +31,7 @@ export default function MovieCard({ movie }: MovieCardProps) {
           )}
         </Link>
 
-        <BookmarkButton movieId={movie.id} />
+        <BookmarkButton movieId={movie.id} className="border border-white" />
       </div>
 
       <div className="flex flex-1 flex-col justify-between p-4">

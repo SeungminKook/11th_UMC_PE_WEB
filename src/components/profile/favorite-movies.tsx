@@ -18,7 +18,7 @@ function FavoriteMovie({ movieId }: { movieId: number }) {
 
   return (
     <li>
-      <Link href={`/movies/ + match[1] + `}>
+      <Link href={`/movies/${movieId}`}>
         {posterUrl ? (
           <img src={posterUrl} alt={`${movie?.title} 포스터`} className="aspect-[7/8] w-full rounded-lg object-cover" />
         ) : (

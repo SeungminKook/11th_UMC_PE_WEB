@@ -14,7 +14,7 @@ export default function MovieCard({ movie }: MovieCardProps) {
     <div className="group relative flex flex-col overflow-hidden rounded-xl bg-gray-900 text-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
       <div className="relative aspect-[2/3] w-full overflow-hidden bg-gray-800">
         <Link
-          href={`/movies/ + match[1] + `}
+          href={`/movies/${movie.id}`}
           className="block h-full w-full"
         >
           {posterUrl ? (
@@ -35,7 +35,7 @@ export default function MovieCard({ movie }: MovieCardProps) {
 
       <div className="flex flex-1 flex-col justify-between p-4">
         <Link
-          href={`/movies/ + match[1] + `}
+          href={`/movies/${movie.id}`}
           className="inline-block"
         >
           <h3 className="line-clamp-1 text-base font-bold text-gray-100 transition-colors group-hover:text-blue-400">

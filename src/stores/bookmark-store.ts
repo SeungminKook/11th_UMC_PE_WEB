@@ -22,8 +22,6 @@ function migrateLegacyBookmarks() {
   localStorage.removeItem(LEGACY_BOOKMARK_KEY);
 }
 
-migrateLegacyBookmarks();
-
 interface BookmarkStore {
   bookmarkedMovieIds: number[];
   toggleBookmark: (movieId: number) => void;
@@ -42,10 +40,18 @@ export const useBookmarkStore = create<BookmarkStore>()(
     }),
     {
       name: PERSISTED_BOOKMARK_KEY,
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(() => window.localStorage),
+      skipHydration: true,
       partialize: (state) => ({
         bookmarkedMovieIds: state.bookmarkedMovieIds,
       }),
     },
   ),
 );
+
+export function restoreBookmarks() {
+  if (!useBookmarkStore.persist) return;
+
+  migrateLegacyBookmarks();
+  void useBookmarkStore.persist.rehydrate();
+}

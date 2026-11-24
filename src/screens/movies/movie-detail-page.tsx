@@ -1,7 +1,9 @@
+"use client";
+
 import { MovieRatingForm } from "../../components/ratings/movie-rating-form";
 import { useAuthStore } from "../../stores/auth-store";
 import { getAuthMemberId } from "../../utils/auth-member-id";
-import { Link, useParams } from "@tanstack/react-router";
+import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { getMovieDetail } from "../../api/movies/get-movie-detail";
 import { getMovieDetailErrorMessage } from "../../utils/movies/get-movie-detail-error-message";
@@ -11,11 +13,7 @@ import {
 } from "../../utils/movies/tmdb-image";
 import { BookmarkButton } from "../../components/bookmark-button";
 
-export function MovieDetailPage() {
-  const { movieId: movieIdParam } = useParams({
-    from: "/movies/$movieId",
-  });
-
+export function MovieDetailPage({ movieIdParam }: { movieIdParam: string }) {
   const movieId = Number(movieIdParam);
   const isValidMovieId = Number.isInteger(movieId) && movieId > 0;
 
@@ -108,7 +106,7 @@ export function MovieDetailPage() {
 
         <div className="mx-auto flex w-full max-w-6xl flex-col justify-end px-4 py-6 sm:px-6 sm:py-8">
           <Link
-            to="/"
+            href="/"
             className="mb-auto inline-flex w-fit items-center gap-2 rounded-full px-1 py-1 text-xs font-medium text-white/90 transition hover:text-white"
           >
             <span aria-hidden="true">←</span> 영화 목록

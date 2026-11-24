@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "@tanstack/react-router";
+import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { getFavorites } from "../../api/favorites/favorites";
 import { getMovieDetail } from "../../api/movies/get-movie-detail";
@@ -18,7 +18,7 @@ function FavoriteMovie({ movieId }: { movieId: number }) {
 
   return (
     <li>
-      <Link to="/movies/$movieId" params={{ movieId: String(movieId) }}>
+      <Link href={`/movies/ + match[1] + `}>
         {posterUrl ? (
           <img src={posterUrl} alt={`${movie?.title} 포스터`} className="aspect-[7/8] w-full rounded-lg object-cover" />
         ) : (

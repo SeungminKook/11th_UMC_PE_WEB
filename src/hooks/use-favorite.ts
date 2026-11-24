@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
+import { useRouter } from "next/navigation";
 import { createFavorite, deleteFavorite, getFavoriteStatus } from "../api/favorites/favorites";
 import { useAuthStore } from "../stores/auth-store";
 import { getAuthMemberId } from "../utils/auth-member-id";
@@ -8,7 +8,7 @@ export function useFavorite(movieId: number) {
   const accessToken = useAuthStore((state) => state.accessToken);
   const memberId = getAuthMemberId(accessToken);
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
+  const router = useRouter();
   const queryKey = ["favorites", memberId, "detail", movieId];
   const favoriteQuery = useQuery({
     queryKey,
@@ -37,7 +37,7 @@ export function useFavorite(movieId: number) {
 
   const toggleBookmark = () => {
     if (memberId === null) {
-      navigate({ to: "/login" });
+      router.push("/login");
       return;
     }
     if (favoriteQuery.isError) {

@@ -1,13 +1,15 @@
-import { Link, useNavigate, useSearch } from "@tanstack/react-router";
-import { useEffect, useState, type SubmitEvent } from "react";
+"use client";
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState, type SubmitEvent } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { searchMovies } from "../../api/movies/search-movies";
 import { getTmdbPosterUrl } from "../../utils/movies/tmdb-image";
 import { useBookmarkStore } from "../../stores/bookmark-store";
 
-export function SearchPage() {
-  const { query } = useSearch({ from: "/search" });
-  const navigate = useNavigate({ from: "/search" });
+export function SearchPage({ query }: { query?: string }) {
+  const router = useRouter();
   const [searchText, setSearchText] = useState(query ?? "");
 
   const bookmarkedMovieIds = useBookmarkStore(
@@ -28,18 +30,14 @@ export function SearchPage() {
   const searchResults = searchQuery.data?.results ?? [];
   const totalResults = searchQuery.data?.total_results ?? 0;
 
-  useEffect(() => {
-    setSearchText(query ?? "");
-  }, [query]);
-
   function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const nextQuery = searchText.trim();
 
-    navigate({
-      search: nextQuery ? { query: nextQuery } : {},
-    });
+    const params = new URLSearchParams({ query: nextQuery });
+
+    router.push(nextQuery ? `/search?${params}` : "/search");
   }
 
   return (
@@ -165,8 +163,7 @@ export function SearchPage() {
                     className="flex min-w-0 gap-3 border-b border-r border-indigo-200 p-3 sm:gap-4 sm:p-4"
                   >
                     <Link
-                      to="/movies/$movieId"
-                      params={{ movieId: String(movie.id) }}
+                      href={`/movies/ + match[1] + `}
                       aria-label={`${movie.title} 상세 보기`}
                       className="h-32 w-20 shrink-0 overflow-hidden rounded-lg bg-gray-200 sm:h-36 sm:w-24"
                     >
@@ -185,8 +182,7 @@ export function SearchPage() {
 
                     <div className="flex min-w-0 flex-1 flex-col items-start">
                       <Link
-                        to="/movies/$movieId"
-                        params={{ movieId: String(movie.id) }}
+                        href={`/movies/ + match[1] + `}
                         className="line-clamp-1 text-sm font-bold text-gray-950 hover:text-indigo-700"
                       >
                         {movie.title}
@@ -202,8 +198,7 @@ export function SearchPage() {
 
                       <div className="mt-auto flex items-center gap-3 pt-2">
                         <Link
-                          to="/movies/$movieId"
-                          params={{ movieId: String(movie.id) }}
+                          href={`/movies/ + match[1] + `}
                           className="text-xs font-semibold text-indigo-600 hover:text-indigo-800"
                         >
                           상세 보기 →

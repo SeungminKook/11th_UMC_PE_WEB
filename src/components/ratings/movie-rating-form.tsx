@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "@tanstack/react-router";
+import Link from "next/link";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createRating, deleteRating, getMemberRatings, updateRating } from "../../api/ratings/ratings";
 import type { Rating, RatingInput } from "../../api/ratings/ratings";
@@ -52,7 +52,7 @@ export function MovieRatingForm({ movieId, memberId }: { movieId: number; member
   });
   const isPending = saveMutation.isPending || deleteMutation.isPending;
 
-  if (memberId === null) return <Link to="/login" className="mt-3 block text-sm text-indigo-600">로그인 후 평점을 남길 수 있어요.</Link>;
+  if (memberId === null) return <Link href="/login" className="mt-3 block text-sm text-indigo-600">로그인 후 평점을 남길 수 있어요.</Link>;
   if (ratingsQuery.isPending) return <p role="status" className="mt-3 text-xs">내 평점을 불러오는 중이에요.</p>;
   if (ratingsQuery.isError) return <button type="button" className="mt-3 text-xs text-red-600" onClick={() => ratingsQuery.refetch()}>평점 조회에 실패했어요. 다시 시도</button>;
 

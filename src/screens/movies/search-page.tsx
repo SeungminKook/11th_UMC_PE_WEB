@@ -163,7 +163,7 @@ export function SearchPage({ query }: { query?: string }) {
                     className="flex min-w-0 gap-3 border-b border-r border-indigo-200 p-3 sm:gap-4 sm:p-4"
                   >
                     <Link
-                      href={`/movies/ + match[1] + `}
+                      href={`/movies/${movie.id}`}
                       aria-label={`${movie.title} 상세 보기`}
                       className="h-32 w-20 shrink-0 overflow-hidden rounded-lg bg-gray-200 sm:h-36 sm:w-24"
                     >
@@ -182,7 +182,7 @@ export function SearchPage({ query }: { query?: string }) {
 
                     <div className="flex min-w-0 flex-1 flex-col items-start">
                       <Link
-                        href={`/movies/ + match[1] + `}
+                        href={`/movies/${movie.id}`}
                         className="line-clamp-1 text-sm font-bold text-gray-950 hover:text-indigo-700"
                       >
                         {movie.title}
@@ -198,7 +198,7 @@ export function SearchPage({ query }: { query?: string }) {
 
                       <div className="mt-auto flex items-center gap-3 pt-2">
                         <Link
-                          href={`/movies/ + match[1] + `}
+                          href={`/movies/${movie.id}`}
                           className="text-xs font-semibold text-indigo-600 hover:text-indigo-800"
                         >
                           상세 보기 →
